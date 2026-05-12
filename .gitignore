@@ -4,6 +4,7 @@ Debug/
 Release/
 *.exe
 *.dll
+*.lib
 *.obj
 *.pdb
 *.ilk
