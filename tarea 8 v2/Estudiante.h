@@ -32,7 +32,9 @@ public:
         std::string nombres,
         std::string apellidos,
         std::string direccion,
-        std::string telefono
+        std::string telefono,
+        std::string fecha_nacimiento,
+        int id_tipo_sangre
     );
 
     int getIdEstudiante();
@@ -46,9 +48,12 @@ public:
     bool validarApellidos();
     bool validarDireccion();
     bool validarTelefono();
+    bool validarFechaNacimiento();
+    bool validarTipoSangre();
 
     bool codigoExiste();
     bool codigoExisteEnOtroRegistro();
+    bool estudianteExiste();
 
     void crear();
     void mostrarTodos();

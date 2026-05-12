@@ -10,7 +10,7 @@ ConexionBD::ConexionBD() {
     this->servidor = "tcp://127.0.0.1:3306";
     this->usuario = "root";
     this->password = "59098233";
-    this->baseDatos = "db_estudiantes";
+    this->baseDatos = "db_escuela";
 }
 
 sql::Connection* ConexionBD::conectar() {

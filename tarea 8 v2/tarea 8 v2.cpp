@@ -41,6 +41,8 @@ void registrarEstudiante() {
     std::string apellidos;
     std::string direccion;
     std::string telefono;
+    std::string fecha_nacimiento;
+    int id_tipo_sangre;
 
     std::cout << std::endl;
     std::cout << "=========== REGISTRAR ESTUDIANTE ===========" << std::endl;
@@ -49,6 +51,8 @@ void registrarEstudiante() {
     std::cout << "- Codigo obligatorio. Ejemplo: E001." << std::endl;
     std::cout << "- Nombres y apellidos solo permiten letras y espacios." << std::endl;
     std::cout << "- Telefono solo permite numeros." << std::endl;
+    std::cout << "- Fecha de nacimiento en formato AAAA-MM-DD." << std::endl;
+    std::cout << "- El tipo de sangre debe existir en la tabla tipos_sangre." << std::endl;
     std::cout << std::endl;
 
     codigo = leerTexto("Ingrese codigo: ");
@@ -56,6 +60,8 @@ void registrarEstudiante() {
     apellidos = leerTexto("Ingrese apellidos: ");
     direccion = leerTexto("Ingrese direccion: ");
     telefono = leerTexto("Ingrese telefono: ");
+    fecha_nacimiento = leerTexto("Ingrese fecha de nacimiento AAAA-MM-DD: ");
+    id_tipo_sangre = leerEntero("Ingrese ID tipo de sangre: ");
 
     Estudiante estudiante(
         0,
@@ -63,7 +69,9 @@ void registrarEstudiante() {
         nombres,
         apellidos,
         direccion,
-        telefono
+        telefono,
+        fecha_nacimiento,
+        id_tipo_sangre
     );
 
     estudiante.crear();
@@ -72,6 +80,36 @@ void registrarEstudiante() {
 void mostrarEstudiantes() {
     Estudiante estudiante;
     estudiante.mostrarTodos();
+}
+
+void mostrarTiposSangre() {
+    ConexionBD db;
+    sql::Connection* conexion = db.conectar();
+
+    if (conexion == nullptr) {
+        return;
+    }
+
+    try {
+        std::unique_ptr<sql::Statement> consulta(conexion->createStatement());
+        std::unique_ptr<sql::ResultSet> resultado(
+            consulta->executeQuery("SELECT id_tipo_sangre, sangre FROM tipos_sangre ORDER BY id_tipo_sangre ASC")
+        );
+
+        std::cout << std::endl;
+        std::cout << "=========== TIPOS DE SANGRE ===========" << std::endl;
+
+        while (resultado->next()) {
+            std::cout << "ID: " << resultado->getInt("id_tipo_sangre")
+                << " | Tipo: " << resultado->getString("sangre") << std::endl;
+        }
+
+        delete conexion;
+    }
+    catch (sql::SQLException& e) {
+        std::cout << "Error al mostrar tipos de sangre: " << e.what() << std::endl;
+        delete conexion;
+    }
 }
 
 void buscarEstudiante() {
@@ -94,6 +132,8 @@ void actualizarEstudiante() {
     std::string apellidos;
     std::string direccion;
     std::string telefono;
+    std::string fecha_nacimiento;
+    int id_tipo_sangre;
 
     std::cout << std::endl;
     std::cout << "=========== ACTUALIZAR ESTUDIANTE ===========" << std::endl;
@@ -102,6 +142,8 @@ void actualizarEstudiante() {
     std::cout << "- Codigo obligatorio. Ejemplo: E001." << std::endl;
     std::cout << "- Nombres y apellidos solo permiten letras y espacios." << std::endl;
     std::cout << "- Telefono solo permite numeros." << std::endl;
+    std::cout << "- Fecha de nacimiento en formato AAAA-MM-DD." << std::endl;
+    std::cout << "- El tipo de sangre debe existir en la tabla tipos_sangre." << std::endl;
     std::cout << std::endl;
 
     id = leerEntero("Ingrese ID del estudiante: ");
@@ -111,6 +153,8 @@ void actualizarEstudiante() {
     apellidos = leerTexto("Ingrese nuevos apellidos: ");
     direccion = leerTexto("Ingrese nueva direccion: ");
     telefono = leerTexto("Ingrese nuevo telefono: ");
+    fecha_nacimiento = leerTexto("Ingrese nueva fecha de nacimiento AAAA-MM-DD: ");
+    id_tipo_sangre = leerEntero("Ingrese nuevo ID tipo de sangre: ");
 
     Estudiante estudiante(
         id,
@@ -118,7 +162,9 @@ void actualizarEstudiante() {
         nombres,
         apellidos,
         direccion,
-        telefono
+        telefono,
+        fecha_nacimiento,
+        id_tipo_sangre
     );
 
     estudiante.actualizar();
@@ -160,6 +206,7 @@ int main() {
         std::cout << "3. Buscar estudiante por ID" << std::endl;
         std::cout << "4. Actualizar estudiante" << std::endl;
         std::cout << "5. Eliminar estudiante" << std::endl;
+        std::cout << "6. Mostrar tipos de sangre" << std::endl;
         std::cout << "0. Salir" << std::endl;
         std::cout << "============================================" << std::endl;
 
@@ -184,6 +231,10 @@ int main() {
 
         case 5:
             eliminarEstudiante();
+            break;
+
+        case 6:
+            mostrarTiposSangre();
             break;
 
         case 0:
